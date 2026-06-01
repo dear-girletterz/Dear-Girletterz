@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Curhat Space 📝</title>
+
+  <style>
+    body{
+      margin:0;
+      font-family:Arial;
+      background:linear-gradient(135deg,#A9D6FF,#D6ECFF,#E6DCFF);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
+
+    .box{
+      width:90%;
+      max-width:400px;
+      text-align:center;
+    }
+
+    textarea{
+      width:100%;
+      height:120px;
+      border:none;
+      border-radius:10px;
+      padding:10px;
+    }
+
+    button{
+      margin-top:10px;
+      padding:10px 20px;
+      border:none;
+      border-radius:10px;
+      background:white;
+    }
+
+    .code{
+      margin-top:15px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box">
+    <h2>Curhat Space 📝</h2>
+
+    <p>Keluarin semuanya lewat tulisan aja, fighting! ^O^</p>
+
+    <textarea id="text" placeholder="tulis apa aja yang kalian mau..."></textarea>
+
+    <br>
+    <button onclick="kirim()">Kirim</button>
+
+    <div class="code" id="kode"></div>
+    <button onclick="copyCode()">Salin Kode</button>
+  </div>
+
+  <script>
+    function generateCode(){
+      return "GLTZ-" + Math.floor(Math.random()*9000+1000);
+    }
+
+    let lastCode = "";
+
+    function kirim(){
+      lastCode = generateCode();
+      document.getElementById("kode").innerText = lastCode;
+      alert("Curhat terkirim 💖");
+    }
+
+    function copyCode(){
+      navigator.clipboard.writeText(lastCode);
+      alert("Kode disalin ✨");
+    }
+  </script>
+
+</body>
+</html>
