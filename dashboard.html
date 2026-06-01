@@ -72,7 +72,7 @@
       snap.forEach(doc => {
         let data = doc.data();
 
-        let statusText = data.isReplied 
+        let statusText = (data.isReplied === true) 
           ? "✔ SUDAH DIBALAS"
           : "⏳ BELUM DIBALAS";
 
