@@ -58,7 +58,7 @@
   <div class="box">
     <h2>Curhat Space 📝</h2>
 
-    <textarea id="text" placeholder="tulis apa yang kamu rasain..."></textarea>
+    <textarea id="text" placeholder="Keluarin semuanya dalam tulisan aja, fighting! ^O^"></textarea>
 
     <button onclick="kirim()">Kirim 💖</button>
 
@@ -83,16 +83,16 @@
 
       lastCode = generateCode();
 
-      // 🔥 SIMPAN KE FIREBASE
+      // 🔥 SIMPAN KE FIREBASE (SUDAH DITAMBAH STATUS)
       await addDoc(collection(db, "curhat"), {
         text: text,
         code: lastCode,
         reply: "",
-        time: Date.now()
+        isReplied: false   // ⭐ INI YANG KAMU MAU
       });
 
       document.getElementById("kode").innerText = lastCode;
-      alert("Curhat terkirim 💕");
+      alert("Curhat terkirim 💖");
       document.getElementById("text").value = "";
     }
 
