@@ -58,45 +58,61 @@
 
   <div id="list"></div>
 
-  <script type="module">
-    import { db } from "./firebase.js";
-    import { collection, getDocs } 
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script type="module">
+  import { db } from "./firebase.js";
+  import {
+    collection,
+    getDocs,
+    doc,
+    updateDoc
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    async function loadData(){
+  async function loadData() {
+    let snap = await getDocs(collection(db, "curhat"));
 
-      let snap = await getDocs(collection(db, "curhat"));
+    let html = "";
 
-      let html = "";
+    snap.forEach(d => {
+      let data = d.data();
 
-      snap.forEach(doc => {
-        let data = doc.data();
+      html += `
+        <div class="card">
+          <div class="code">${data.code}</div>
+          <div class="text">${data.text}</div>
 
-        let statusText = (data.isReplied === true) 
-          ? "✔ SUDAH DIBALAS"
-          : "⏳ BELUM DIBALAS";
-
-        let statusClass = data.isReplied 
-          ? "done"
-          : "pending";
-
-        html += `
-          <div class="card">
-            <div class="code">${data.code}</div>
-            <div class="text">${data.text}</div>
-
-            <div class="status ${statusClass}">
-              ${statusText}
-            </div>
+          <div class="status ${data.isReplied ? "done" : "pending"}">
+            ${data.isReplied ? "✔ SUDAH DIBALAS" : "⏳ BELUM DIBALAS"}
           </div>
-        `;
-      });
 
-      document.getElementById("list").innerHTML = html;
-    }
+          <input id="reply-${d.id}" placeholder="tulis balasan..." style="width:100%;padding:8px;margin-top:8px;border:none;border-radius:10px;">
 
-    loadData();
-  </script>
+          <button onclick="balas('${d.id}')"
+            style="margin-top:8px;padding:8px 12px;border:none;border-radius:10px;background:white;">
+            Kirim Balasan 💬
+          </button>
+        </div>
+      `;
+    });
+
+    document.getElementById("list").innerHTML = html;
+  }
+
+  window.balas = async function(id) {
+    let text = document.getElementById("reply-" + id).value;
+
+    if (!text) return;
+
+    await updateDoc(doc(db, "curhat", id), {
+      reply: text,
+      isReplied: true
+    });
+
+    alert("Balasan terkirim 💕");
+    loadData(); // refresh tampilan
+  };
+
+  loadData();
+</script>
 
 </body>
 </html>
