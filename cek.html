@@ -92,12 +92,10 @@
           ketemu = true;
 
           if(data.reply && data.reply !== ""){
-            hasil.innerText = "💬 BALASAN:\n\n" + data.reply;
-          } else {
-            hasil.innerText = "⏳ belum ada balasan dari admin";
+  hasil.innerText = "💬 BALASAN:\n\n" + data.reply;
+} else {
+  hasil.innerText = "⏳ belum dibalas";
           }
-        }
-      });
 
       if(!ketemu){
         hasil.innerText = "kode tidak ditemukan ❌";
