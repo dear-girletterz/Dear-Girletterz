@@ -3,13 +3,13 @@
 <head>
   <title>Cek Balasan 🪧</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
     body{
       margin:0;
-      font-family:'Poppins';
-      background: linear-gradient(135deg,#A9D6FF,#D6ECFF,#E6DCFF);
+      font-family:Poppins;
+      background:linear-gradient(135deg,#A9D6FF,#D6ECFF,#E6DCFF);
       height:100vh;
       display:flex;
       justify-content:center;
@@ -21,14 +21,9 @@
       max-width:420px;
       background:rgba(255,255,255,0.35);
       backdrop-filter: blur(15px);
-      border-radius:20px;
       padding:25px;
+      border-radius:20px;
       text-align:center;
-    }
-
-    h2{
-      margin-bottom:10px;
-      color:#1f2a44;
     }
 
     input{
@@ -37,94 +32,77 @@
       border:none;
       border-radius:12px;
       outline:none;
-      font-family:'Inter';
     }
 
-    .btn{
-      margin-top:12px;
+    button{
+      margin-top:10px;
       width:100%;
       padding:12px;
       border:none;
       border-radius:12px;
       background:white;
       cursor:pointer;
-      transition:0.3s;
     }
 
-    .btn:hover{
-      transform:scale(1.02);
+    .hasil{
+      margin-top:15px;
+      font-weight:500;
+      color:#1f2a44;
+      white-space:pre-wrap;
     }
-
-    .result{
-      margin-top:20px;
-      padding:15px;
-      border-radius:15px;
-      background:rgba(255,255,255,0.6);
-      font-size:14px;
-      display:none;
-    }
-
-    .hint{
-      font-size:12px;
-      opacity:0.6;
-      margin-bottom:10px;
-    }
-
   </style>
 </head>
 
 <body>
 
   <div class="box">
-
     <h2>Cek Balasan 🪧</h2>
 
-    <div class="hint">Masukkan kode GLTZ-xxxx kamu</div>
+    <input id="kode" placeholder="Masukkan kode GLTZ...">
 
-    <input id="kode" placeholder="contoh: GLTZ-1234">
+    <button onclick="cek()">Cek 💙</button>
 
-    <button class="btn" onclick="cek()">Cek Balasan 💬</button>
-
-    <div class="result" id="hasil">
-      <b>Balasan:</b>
-      <p id="isi"></p>
-    </div>
-
+    <div class="hasil" id="hasil"></div>
   </div>
 
-  <script>
-    <script type="module">
-import { db } from "./firebase.js";
-import { collection, getDocs } 
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  <script type="module">
+    import { db } from "./firebase.js";
+    import { collection, getDocs } 
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-window.cek = async function(){
+    window.cek = async function(){
 
-  let kode = document.getElementById("kode").value;
+      let kode = document.getElementById("kode").value;
+      let hasil = document.getElementById("hasil");
 
-  let snap = await getDocs(collection(db,"curhat"));
+      if(!kode){
+        hasil.innerText = "masukin kode dulu ya 💙";
+        return;
+      }
 
-  let ketemu = false;
+      let snap = await getDocs(collection(db, "curhat"));
 
-  snap.forEach(d => {
-    let data = d.data();
+      let ketemu = false;
 
-    if(data.code === kode){
-      ketemu = true;
+      snap.forEach(doc => {
+        let data = doc.data();
 
-      if(data.reply && data.reply !== ""){
-        document.getElementById("hasil").innerText = data.reply;
-      } else {
-        document.getElementById("hasil").innerText = "belum ada balasan 💙";
+        if(data.code === kode){
+          ketemu = true;
+
+          if(data.reply && data.reply !== ""){
+            hasil.innerText = "💬 BALASAN:\n\n" + data.reply;
+          } else {
+            hasil.innerText = "⏳ belum ada balasan dari admin";
+          }
+        }
+      });
+
+      if(!ketemu){
+        hasil.innerText = "kode tidak ditemukan ❌";
       }
     }
-  });
-
-  if(!ketemu){
-    document.getElementById("hasil").innerText = "kode tidak ditemukan";
-  }
-}
-</script>
+  </script>
 
 </body>
 </html>
