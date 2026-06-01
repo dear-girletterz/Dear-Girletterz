@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard Admin 🔒</title>
+  <title>Admin Dashboard 🔒</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
@@ -28,25 +28,26 @@
 
     .code{
       font-weight:bold;
-      color:#1f2a44;
+      color:#2b2b2b;
     }
 
-    input{
-      width:100%;
-      margin-top:8px;
-      padding:8px;
-      border:none;
-      border-radius:10px;
-      outline:none;
+    .text{
+      margin-top:5px;
+      font-size:14px;
     }
 
-    button{
+    .status{
       margin-top:8px;
-      padding:8px 12px;
-      border:none;
-      border-radius:10px;
-      background:white;
-      cursor:pointer;
+      font-weight:600;
+      font-size:13px;
+    }
+
+    .done{
+      color:green;
+    }
+
+    .pending{
+      color:orange;
     }
   </style>
 </head>
@@ -59,28 +60,34 @@
 
   <script type="module">
     import { db } from "./firebase.js";
-    import { collection, getDocs, doc, updateDoc } 
+    import { collection, getDocs } 
     from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    async function load(){
+    async function loadData(){
 
       let snap = await getDocs(collection(db, "curhat"));
 
       let html = "";
 
-      snap.forEach(d => {
-        let data = d.data();
+      snap.forEach(doc => {
+        let data = doc.data();
+
+        let statusText = data.isReplied 
+          ? "✔ SUDAH DIBALAS"
+          : "⏳ BELUM DIBALAS";
+
+        let statusClass = data.isReplied 
+          ? "done"
+          : "pending";
 
         html += `
           <div class="card">
-            <div class="code">📌 ${data.code}</div>
-            <div>${data.text}</div>
+            <div class="code">${data.code}</div>
+            <div class="text">${data.text}</div>
 
-            <input id="r-${data.code}" placeholder="tulis balasan...">
-
-            <button onclick="balas('${d.id}','${data.code}')">
-              Balas 💬
-            </button>
+            <div class="status ${statusClass}">
+              ${statusText}
+            </div>
           </div>
         `;
       });
@@ -88,19 +95,7 @@
       document.getElementById("list").innerHTML = html;
     }
 
-    window.balas = async function(id, code){
-      let text = document.getElementById("r-"+code).value;
-
-      if(text.trim() === "") return;
-
-      await updateDoc(doc(db,"curhat",id),{
-        reply:text
-      });
-
-      alert("Balasan terkirim 💕");
-    }
-
-    load();
+    loadData();
   </script>
 
 </body>
