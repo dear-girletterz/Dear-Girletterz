@@ -3,12 +3,12 @@
 <head>
   <title>Curhat Space 📝</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
     body{
       margin:0;
-      font-family:'Poppins';
+      font-family:Poppins;
       background:linear-gradient(135deg,#A9D6FF,#D6ECFF,#E6DCFF);
       height:100vh;
       display:flex;
@@ -32,77 +32,73 @@
       border:none;
       border-radius:15px;
       padding:12px;
-      font-family:'Inter';
       outline:none;
-      resize:none;
     }
 
-    .hint{
-      font-size:12px;
-      opacity:0.6;
-      margin-bottom:10px;
-    }
-
-    .btn{
-      margin-top:12px;
+    button{
+      margin-top:10px;
       padding:12px;
       width:100%;
       border:none;
       border-radius:12px;
       background:white;
       cursor:pointer;
-      transition:0.3s;
-    }
-
-    .btn:hover{
-      transform:scale(1.02);
     }
 
     .code{
       margin-top:15px;
-      font-weight:600;
+      font-weight:bold;
       color:#1f2a44;
     }
-
-    .small{
-      font-size:12px;
-      opacity:0.6;
-    }
-
   </style>
 </head>
 
 <body>
 
   <div class="box">
-
     <h2>Curhat Space 📝</h2>
 
-    <textarea id="text" placeholder="keluarin semuanya dalam tulisan aja, fighting! ^O^"></textarea>
+    <textarea id="text" placeholder="tulis apa yang kamu rasain..."></textarea>
 
-    <button class="btn" onclick="kirim()">Kirim 💖</button>
+    <button onclick="kirim()">Kirim 💖</button>
 
     <div class="code" id="kode"></div>
-    <div class="small">salin kode ini untuk lihat balasan nanti</div>
-    <button class="btn" onclick="copy()">Salin Kode 📋</button>
-
+    <button onclick="copy()">Salin Kode 📋</button>
   </div>
 
-  <script>
-    function gen(){
+  <script type="module">
+    import { db } from "./firebase.js";
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    function generateCode(){
       return "GLTZ-" + Math.floor(Math.random()*9000+1000);
     }
 
-    let last="";
+    let lastCode = "";
 
-    function kirim(){
-      last = gen();
-      document.getElementById("kode").innerText = last;
+    window.kirim = async function(){
+      let text = document.getElementById("text").value;
+
+      if(text.trim() === "") return;
+
+      lastCode = generateCode();
+
+      // 🔥 SIMPAN KE FIREBASE
+      await addDoc(collection(db, "curhat"), {
+        text: text,
+        code: lastCode,
+        reply: "",
+        time: Date.now()
+      });
+
+      document.getElementById("kode").innerText = lastCode;
+      alert("Curhat terkirim 💕");
+      document.getElementById("text").value = "";
     }
 
-    function copy(){
-      navigator.clipboard.writeText(last);
-      alert("kode disalin ✨");
+    window.copy = function(){
+      navigator.clipboard.writeText(lastCode);
+      alert("Kode disalin ✨");
     }
   </script>
 
