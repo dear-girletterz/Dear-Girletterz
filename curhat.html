@@ -87,8 +87,8 @@
       await addDoc(collection(db, "curhat"), {
         text: text,
         code: lastCode,
-        reply: "",
-        isReplied: false   // ⭐ INI YANG KAMU MAU
+        reply: text,
+        isReplied: true   // ⭐ INI YANG KAMU MAU
       });
 
       document.getElementById("kode").innerText = lastCode;
