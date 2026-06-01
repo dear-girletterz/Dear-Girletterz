@@ -2,23 +2,111 @@
 <html>
 <head>
   <title>Cek Balasan 🪧</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    body{
+      margin:0;
+      font-family:'Poppins';
+      background: linear-gradient(135deg,#A9D6FF,#D6ECFF,#E6DCFF);
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .box{
+      width:90%;
+      max-width:420px;
+      background:rgba(255,255,255,0.35);
+      backdrop-filter: blur(15px);
+      border-radius:20px;
+      padding:25px;
+      text-align:center;
+    }
+
+    h2{
+      margin-bottom:10px;
+      color:#1f2a44;
+    }
+
+    input{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:12px;
+      outline:none;
+      font-family:'Inter';
+    }
+
+    .btn{
+      margin-top:12px;
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:12px;
+      background:white;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .btn:hover{
+      transform:scale(1.02);
+    }
+
+    .result{
+      margin-top:20px;
+      padding:15px;
+      border-radius:15px;
+      background:rgba(255,255,255,0.6);
+      font-size:14px;
+      display:none;
+    }
+
+    .hint{
+      font-size:12px;
+      opacity:0.6;
+      margin-bottom:10px;
+    }
+
+  </style>
 </head>
 
-<body style="text-align:center;font-family:Arial;background:#D6ECFF;padding:50px;">
+<body>
 
-  <h2>Cek Balasan 💬</h2>
+  <div class="box">
 
-  <input id="kode" placeholder="Masukkan kode GLTZ-xxxx">
-  <br><br>
+    <h2>Cek Balasan 🪧</h2>
 
-  <button onclick="cek()">Cek</button>
+    <div class="hint">Masukkan kode GLTZ-xxxx kamu</div>
 
-  <p id="hasil"></p>
+    <input id="kode" placeholder="contoh: GLTZ-1234">
+
+    <button class="btn" onclick="cek()">Cek Balasan 💬</button>
+
+    <div class="result" id="hasil">
+      <b>Balasan:</b>
+      <p id="isi"></p>
+    </div>
+
+  </div>
 
   <script>
     function cek(){
-      document.getElementById("hasil").innerText =
-      "Belum ada balasan (nanti kalau pakai Firebase baru bisa real 💙)";
+      let kode = document.getElementById("kode").value;
+
+      let hasil = document.getElementById("hasil");
+      let isi = document.getElementById("isi");
+
+      // dummy dulu (nanti Firebase)
+      if(kode.trim() === ""){
+        alert("isi kode dulu ☘️");
+        return;
+      }
+
+      hasil.style.display = "block";
+      isi.innerText = "Belum ada balasan (nanti kalau sudah pakai Firebase akan muncul di sini 💙)";
     }
   </script>
 
