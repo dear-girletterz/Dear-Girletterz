@@ -93,22 +93,38 @@
   </div>
 
   <script>
-    function cek(){
-      let kode = document.getElementById("kode").value;
+    <script type="module">
+import { db } from "./firebase.js";
+import { collection, getDocs } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-      let hasil = document.getElementById("hasil");
-      let isi = document.getElementById("isi");
+window.cek = async function(){
 
-      // dummy dulu (nanti Firebase)
-      if(kode.trim() === ""){
-        alert("isi kode dulu ☘️");
-        return;
+  let kode = document.getElementById("kode").value;
+
+  let snap = await getDocs(collection(db,"curhat"));
+
+  let ketemu = false;
+
+  snap.forEach(d => {
+    let data = d.data();
+
+    if(data.code === kode){
+      ketemu = true;
+
+      if(data.reply && data.reply !== ""){
+        document.getElementById("hasil").innerText = data.reply;
+      } else {
+        document.getElementById("hasil").innerText = "belum ada balasan 💙";
       }
-
-      hasil.style.display = "block";
-      isi.innerText = "Belum ada balasan (nanti kalau sudah pakai Firebase akan muncul di sini 💙)";
     }
-  </script>
+  });
+
+  if(!ketemu){
+    document.getElementById("hasil").innerText = "kode tidak ditemukan";
+  }
+}
+</script>
 
 </body>
 </html>
